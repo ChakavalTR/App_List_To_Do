@@ -1,4 +1,5 @@
 import 'package:app_list_to_do/screens/add_task_screen.dart';
+import 'package:app_list_to_do/screens/task_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -43,10 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
               trackVisibility: true,
               child: ListView(
                 children: [
-                  WidgetContainer(),
-                  WidgetContainer(),
-                  WidgetContainer(),
-                  WidgetContainer(),
+                  WidgetContainer(title: 'Buy Groceries'),
+                  WidgetContainer(title: 'Walk the Dog'),
+                  WidgetContainer(title: 'Read a Book'),
+                  WidgetContainer(title: 'Exercise'),
                 ],
               ),
             ),
@@ -99,7 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
 //! Widget Container
 class WidgetContainer extends StatefulWidget {
-  const WidgetContainer({super.key});
+  final String title;
+  const WidgetContainer({super.key, required this.title});
 
   @override
   State<WidgetContainer> createState() => _WidgetContainerState();
@@ -107,6 +109,13 @@ class WidgetContainer extends StatefulWidget {
 
 class _WidgetContainerState extends State<WidgetContainer> {
   bool? isChecked = false;
+  late TextEditingController taskEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    taskEditingController = TextEditingController(text: widget.title);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,13 +143,20 @@ class _WidgetContainerState extends State<WidgetContainer> {
             ),
           ),
           Text(
-            'Buy Groceries',
+            taskEditingController.text,
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
           ),
-
           Spacer(),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      TaskDetailScreen(taskText: taskEditingController.text),
+                ),
+              );
+            },
             icon: Icon(Icons.edit, color: Colors.blueAccent, size: 30),
           ),
           IconButton(
