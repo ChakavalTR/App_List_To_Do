@@ -183,15 +183,17 @@ class _WidgetContainerState extends State<WidgetContainer> {
           ),
           Spacer(),
           IconButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              String updateTask = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
                       TaskDetailScreen(taskText: taskEditingController.text),
                 ),
               );
-              widget.onUpdate(widget.index, taskEditingController.text);
+              if (updateTask.isNotEmpty) {
+                widget.onUpdate(widget.index, updateTask);
+              }
             },
             icon: Icon(Icons.edit, color: Colors.blueAccent, size: 30),
           ),

@@ -18,6 +18,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   }
 
   @override
+  void dispose() {
+    taskEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -63,8 +69,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                         actions: [
                           TextButton(
                             onPressed: () {
-                              Navigator.pop(context);
                               Navigator.pop(context, updateTask);
+                              Navigator.pop(context);
                             },
                             child: Text('OK'),
                           ),
