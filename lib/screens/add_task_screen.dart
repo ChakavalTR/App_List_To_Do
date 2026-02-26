@@ -70,7 +70,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       backgroundColor: Colors.green,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                    Navigator.pop(context);
+                    Navigator.pop(context, _taskEditingController.text);
                   }
                 },
                 style: ElevatedButton.styleFrom(

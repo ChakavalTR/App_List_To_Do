@@ -12,6 +12,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool? isChecked = false;
   int currentIndex = 0;
+  List<String> tasks = [];
+
+  void updateTask(int index, String newTask) {
+    setState(() {
+      tasks[index] = newTask;
+    });
+  }
+
+  void deletetask(int index) {
+    setState(() {
+      tasks.removeAt(index);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +38,20 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              String? newTask = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AddTaskScreen()),
+                MaterialPageRoute(
+                  builder: (context) {
+                    return AddTaskScreen();
+                  },
+                ),
               );
+              if (newTask != null && newTask.isNotEmpty) {
+                setState(() {
+                  tasks.add(newTask);
+                });
+              }
             },
             icon: Icon(Icons.add, size: 35),
           ),
@@ -42,13 +64,17 @@ class _HomeScreenState extends State<HomeScreen> {
               scrollbarOrientation: ScrollbarOrientation.right,
               thickness: 5,
               trackVisibility: true,
-              child: ListView(
-                children: [
-                  WidgetContainer(title: 'Buy Groceries'),
-                  WidgetContainer(title: 'Walk the Dog'),
-                  WidgetContainer(title: 'Read a Book'),
-                  WidgetContainer(title: 'Exercise'),
-                ],
+              child: ListView.builder(
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  var task = tasks[index];
+                  return WidgetContainer(
+                    title: task,
+                    index: index,
+                    onDelete: deletetask,
+                    onUpdate: updateTask,
+                  );
+                },
               ),
             ),
           ),
@@ -101,7 +127,16 @@ class _HomeScreenState extends State<HomeScreen> {
 //! Widget Container
 class WidgetContainer extends StatefulWidget {
   final String title;
-  const WidgetContainer({super.key, required this.title});
+  final int index;
+  final Function(int) onDelete;
+  final Function(int, String) onUpdate;
+  const WidgetContainer({
+    super.key,
+    required this.title,
+    required this.index,
+    required this.onUpdate,
+    required this.onDelete,
+  });
 
   @override
   State<WidgetContainer> createState() => _WidgetContainerState();
@@ -156,6 +191,7 @@ class _WidgetContainerState extends State<WidgetContainer> {
                       TaskDetailScreen(taskText: taskEditingController.text),
                 ),
               );
+              widget.onUpdate(widget.index, taskEditingController.text);
             },
             icon: Icon(Icons.edit, color: Colors.blueAccent, size: 30),
           ),
@@ -176,6 +212,7 @@ class _WidgetContainerState extends State<WidgetContainer> {
                     actions: [
                       TextButton(
                         onPressed: () {
+                          widget.onDelete(widget.index);
                           Navigator.pop(context);
                         },
                         child: Text('Yes'),
