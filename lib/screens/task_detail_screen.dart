@@ -52,32 +52,16 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             width: 380,
             child: ElevatedButton(
               onPressed: () {
-                String updateTask = taskEditingController.text;
-                if (updateTask.isNotEmpty) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text(
-                          'Task Edited',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
-                          ),
-                        ),
-                        content: Text('The task has been edited successfully.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context, updateTask);
-                              Navigator.pop(context);
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                SnackBar snackBar = SnackBar(
+                  content: Text(
+                    '${taskEditingController.text} has been updated!',
+                  ),
+                  backgroundColor: Colors.green,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                String updatedTask = taskEditingController.text;
+                if (updatedTask.isNotEmpty) {
+                  Navigator.pop(context, updatedTask);
                 }
               },
               style: ElevatedButton.styleFrom(

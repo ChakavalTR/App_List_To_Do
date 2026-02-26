@@ -193,6 +193,9 @@ class _WidgetContainerState extends State<WidgetContainer> {
               );
               if (updateTask.isNotEmpty) {
                 widget.onUpdate(widget.index, updateTask);
+                setState(() {
+                  taskEditingController.text = updateTask;
+                });
               }
             },
             icon: Icon(Icons.edit, color: Colors.blueAccent, size: 30),
